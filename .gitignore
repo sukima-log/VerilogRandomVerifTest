@@ -1,0 +1,8 @@
+sim/*
+!makefile
+!sim.sh
+!sim.tcl
+
+
+vivado/*
+!.gitkeep
