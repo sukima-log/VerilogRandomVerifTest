@@ -108,12 +108,14 @@ initial begin
 
     $display("test end");
 
+    `ifdef SVA
     $display("");
     $display("----- assert result -----");
     $display("[SVA] pulse test : fire = %d, FAIL = %d",
                 tbench.counter.pulse_test_inst.fire_p_test,
                 tbench.counter.pulse_test_inst.fail_p_test);
     $display("");
+    `endif
 
     $finish();
 end

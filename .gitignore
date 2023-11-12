@@ -6,3 +6,5 @@ sim/*
 
 vivado/*
 !.gitkeep
+
+tb/tp.sv

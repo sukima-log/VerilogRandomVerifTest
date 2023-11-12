@@ -1,7 +1,7 @@
 
-`define DEBUG
+// `define SVA
 
-`ifdef DEBUG
+`ifdef SVA
 
 bind tbench.counter pulse_test pulse_test_inst (
     .clk    (clk)
