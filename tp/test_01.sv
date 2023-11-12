@@ -1,6 +1,6 @@
 
 //- parameter
-localparam P_BASE   = 'd9;
+localparam P_BASE   = 'd10;
 localparam P_BIT    = clogb2(P_BASE);
 
 int unsigned wait_time;
@@ -23,13 +23,14 @@ class Transaction;
 
     // random constraint
     constraint cl {
-        enable      inside  {0,1};
+        // enable      inside  {0,1};
+        // up_dw       inside  {0,1};
+        // wenable     inside  {0,1};
+        // wcount      inside  {[0:P_BASE], P_BASE+1};
         enable      dist    {0:/80, 1:/20};
-        up_dw       inside  {0,1};
-        up_dw       dist    {0:/5,  1:/95};
-        wenable     inside  {0,1};
-        wenable     dist    {0:/99, 1:/1};
-        wcount      inside  {[0:P_BASE], P_BASE+1};
+        up_dw       dist    {0:/10, 1:/90};
+        wenable     dist    {0:/80, 1:/20};
+        wcount      dist    {[0:P_BASE]:/90, P_BASE+1:/10};
     }
 
     // constructor(Initialize)
@@ -90,13 +91,15 @@ initial begin
 
     repeat(repeat_num) begin
         for (integer i=0; i<10; i++) begin
-            #(10)   //- ##
-            $display("enable - %d, up/dw - %d, wenable - %d, wcount - %d, count - %d", enable, up_dw, wenable, wcount, count);
+            $write("enable : %d, up/dw : %d, wenable : %d, wcount : %d ", enable, up_dw, wenable, wcount);
             //- wait posedge clock
             @(posedge clk);
+            #(1);
+            $display("= count : %d", count);
+            #(1);
             //- High frequency change (sync)
-            enable      = tr.enable;
             if(!tr.randomize()) $finish;
+            enable      = tr.enable;
         end
         //- Low frequency change (sync)
         up_dw       = tr.up_dw;

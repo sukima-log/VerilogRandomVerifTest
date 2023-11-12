@@ -20,7 +20,7 @@ module counter #(
     // write enable
     // ---------------------------
 
-    wire w_wenable = wenable & (wcount < P_BASE+1);
+    wire w_wenable = wenable & (wcount < P_BASE);
 
     // ---------------------------
     // count up down
