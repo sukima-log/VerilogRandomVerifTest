@@ -2,10 +2,16 @@
 `timescale 1ps/1ps
 `default_nettype none
 
-module pulse_test (
-    input wire clk,
-    input wire resetn,
-    input wire carry
+module pulse_test #(
+    parameter P_BIT = 4
+) (
+    input wire                clk
+,   input wire                resetn
+,   input wire                enable
+,   input wire                wenable
+,   input wire [(P_BIT-1):0]  wcount
+,   input wire [(P_BIT-1):0]  count
+,   input wire                carry
 );
 
   logic [15:0] fire_p_test;
@@ -15,16 +21,16 @@ module pulse_test (
   assign fire_p_test = pass_p_test + fail_p_test;
 
   // property 記述
-  property p_test1 ();
+  property p_test1 (integer nClock);
     @(posedge clk) disable iff(~resetn)
-        $rose(carry) |-> ##1 ~carry;
+        $rose(carry) |-> ##nClock ~carry;
   endproperty
 
-  assert property (p_test1) begin
+  assert property (p_test1(1)) begin
     pass_p_test = pass_p_test + 1;
   end else begin
     fail_p_test = fail_p_test + 1;
-     $display("[SVA] Error : p_test1 assertion failed");
+     $info("[SVA] Error : p_test1 assertion failed");
     //  $finish;
   end
     
