@@ -21,17 +21,35 @@ module pulse_test #(
   assign fire_p_test = pass_p_test + fail_p_test;
 
   // property 記述
-  property p_test1 (integer nClock);
-    @(posedge clk) disable iff(~resetn)
-        $rose(carry) |-> ##nClock ~carry;
+  property p_test1 ();
+    @(negedge clk) disable iff(~resetn)
+        $rose(carry) |-> ##[1:3] ~carry;
   endproperty
 
-  assert property (p_test1(1)) begin
+  property p_test2 ();
+    @(negedge clk) disable iff(~resetn)
+        (enable == 1'b1) and (wenable == 1'b0)
+        |-> ##1 ($changed(count));
+  endproperty
+  
+
+  set_p_test1:assert property (p_test1) 
+  begin
+    $info("[SVA] p_test1 OK");
     pass_p_test = pass_p_test + 1;
   end else begin
     fail_p_test = fail_p_test + 1;
      $info("[SVA] Error : p_test1 assertion failed");
-    //  $finish;
+  end
+
+  set_p_test2:assert property (p_test2) 
+  begin
+    $info("[SVA] p_test2 OK");
+    pass_p_test = pass_p_test + 1;
+  end else begin
+    fail_p_test = fail_p_test + 1;
+    $info("[SVA] Error count : %d, carry : %d", $sampled(count), $sampled(carry));
+    $info("[SVA] Error : p_test2 assertion failed");
   end
     
 endmodule

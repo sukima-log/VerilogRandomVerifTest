@@ -76,7 +76,7 @@ counter #(
 //- Instance
 Transaction tr = new();
 //- repeat
-localparam repeat_num = 10;
+localparam repeat_num = 100;
 
 initial begin
     // initiarize
