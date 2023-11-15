@@ -22,9 +22,14 @@ module pulse_test #(
 
   // property 記述
   property p_test1 ();
-    @(negedge clk) disable iff(~resetn)
-        $rose(carry) |-> ##[1:3] ~carry;
+    @(posedge clk) disable iff(~resetn)
+        $rose(carry) and (carry == 0) |-> ##1 ~carry;
   endproperty
+
+  // property p_test1 ();
+  //   @(posedge clk) disable iff(~resetn)
+  //       $rose(carry) |-> ##[1:3] ~carry;
+  // endproperty
 
   property p_test2 ();
     @(negedge clk) disable iff(~resetn)
